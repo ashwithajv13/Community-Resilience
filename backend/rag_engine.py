@@ -36,13 +36,10 @@ CHUNK_OVERLAP = 100    # overlap between chunks
 
 class RAGEngine:
     def __init__(self):
-        self.groq_api_key = os.getenv("GROQ_API_KEY")
-        self.groq_model = os.getenv("GROQ_MODEL", "groq/compound-mini")
-        self.groq_api_base = os.getenv("GROQ_API_BASE", "https://api.groq.dev/v1")
-        if self.groq_api_key:
-            print(f"INFO: Groq API enabled with model {self.groq_model}")
-        else:
-            print("WARNING: GROQ_API_KEY not set. Using local synthesis only.")
+        self.groq_api_key = os.getenv("GROQ_API_KEY", "")
+        self.groq_model = "llama3-8b-8192"
+        self.groq_api_base = "https://api.groq.com/openai/v1"
+        print(f"INFO: Groq API enabled with model {self.groq_model}")
 
         self.chunks: List[str] = []
         self.index = None
@@ -81,8 +78,8 @@ class RAGEngine:
         context_chunks = self.retrieve(user_message, top_k=5)
 
         if self.groq_api_key:
-            prompt = self._build_groq_prompt(system_prompt, history, user_message, context_chunks)
-            model_response = self._call_groq(prompt)
+            messages = self._build_groq_messages(system_prompt, history, user_message, context_chunks)
+            model_response = self._call_groq(messages)
             if model_response:
                 return model_response
             print("WARNING: Groq generation failed; falling back to local synthesis.")
@@ -110,7 +107,26 @@ class RAGEngine:
             "If this is a real emergency, call 112 (National Emergency) or 1078 (NDRF) immediately."
         )
 
+    def _build_groq_messages(self, system_prompt: str, history: list, user_message: str, chunks: List[str]) -> list:
+        if chunks:
+            context_text = "\n\n".join(chunks)
+        else:
+            context_text = "No relevant manual context found. Use standard NDRF protocols only."
+
+        full_system = f"{system_prompt}\n\nVERIFIED CONTEXT:\n{context_text}"
+        messages = [{"role": "system", "content": full_system}]
+
+        for turn in history:
+            role = turn.get("role", "user")
+            content = turn.get("content", "")
+            if content and role in ("user", "assistant"):
+                messages.append({"role": role, "content": content})
+
+        messages.append({"role": "user", "content": user_message})
+        return messages
+
     def _build_groq_prompt(self, system_prompt: str, history: list, user_message: str, chunks: List[str]) -> str:
+        """Legacy: kept for compatibility but not used when Groq is active."""
         if chunks:
             context_text = "\n\n".join(chunks)
         else:
@@ -132,11 +148,12 @@ class RAGEngine:
         )
         return prompt
 
-    def _call_groq(self, prompt: str) -> str:
-        endpoint = f"{self.groq_api_base}/models/{self.groq_model}/outputs"
+    def _call_groq(self, messages: list) -> str:
+        endpoint = f"{self.groq_api_base}/chat/completions"
         payload = {
-            "input": prompt,
-            "max_output_tokens": 256,
+            "model": self.groq_model,
+            "messages": messages,
+            "max_tokens": 512,
             "temperature": 0.2,
         }
         data = json.dumps(payload).encode("utf-8")
@@ -145,9 +162,9 @@ class RAGEngine:
             "Authorization": f"Bearer {self.groq_api_key}",
         }
 
-        request = urllib.request.Request(endpoint, data=data, headers=headers, method="POST")
+        req = urllib.request.Request(endpoint, data=data, headers=headers, method="POST")
         try:
-            with urllib.request.urlopen(request, timeout=20) as response:
+            with urllib.request.urlopen(req, timeout=20) as response:
                 response_data = response.read().decode("utf-8")
                 result = json.loads(response_data)
         except urllib.error.HTTPError as err:
@@ -161,15 +178,11 @@ class RAGEngine:
             print(f"ERROR: Groq API request failed: {err}")
             return ""
 
-        output = result.get("output")
-        if isinstance(output, list):
-            if output and isinstance(output[0], dict) and "content" in output[0]:
-                return "".join(item.get("content", "") for item in output if isinstance(item, dict))
-            if all(isinstance(item, str) for item in output):
-                return "".join(output)
-        if isinstance(output, str):
-            return output
-        return result.get("text", "") or ""
+        try:
+            return result["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as e:
+            print(f"ERROR: Unexpected Groq response format: {e} — {result}")
+            return ""
 
     def _synthesize_response(self, query: str, chunks: List[str]) -> str:
         """Synthesize a coherent answer from multiple knowledge chunks."""

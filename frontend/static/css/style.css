@@ -242,8 +242,9 @@ body::before {
   background: rgba(255,255,255,0.95);
   border: 1px solid var(--border);
   border-radius: 18px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 16px 40px rgba(15,23,42,0.05);
+  position: relative;
 }
 
 .map-panel-header {
@@ -278,12 +279,24 @@ body::before {
   border-radius: 10px;
   cursor: pointer;
   transition: transform 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
-.map-action-btn:hover { transform: translateY(-1px); }
+.map-action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+.map-action-btn.secondary {
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: var(--accent);
+}
+.map-action-btn.secondary:hover { background: rgba(99,102,241,0.15); }
 
 .map-canvas {
-  height: 260px;
-  min-height: 220px;
+  height: 300px;
+  min-height: 260px;
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 1;
 }
 
 .map-footer {
@@ -292,6 +305,30 @@ body::before {
   font-size: 10px;
   color: var(--muted);
   border-top: 1px solid rgba(156,163,175,0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.map-legend {
+  padding: 12px 20px;
+  background: rgba(99,102,241,0.04);
+  border-top: 1px solid rgba(156,163,175,0.12);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text);
+}
+
+.legend-marker {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* ── QUICK CHIPS ── */
@@ -329,9 +366,13 @@ body::before {
   flex-direction: column;
   gap: 18px;
   scroll-behavior: smooth;
+  scroll-padding-bottom: 20px;
+  min-height: 300px;
 }
-.messages::-webkit-scrollbar { width: 3px; }
-.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.messages::-webkit-scrollbar { width: 6px; }
+.messages::-webkit-scrollbar-track { background: rgba(99,102,241,0.04); }
+.messages::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+.messages::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
 
 .msg-wrap { display: flex; flex-direction: column; gap: 5px; }
 .msg-wrap.user { align-items: flex-end; }

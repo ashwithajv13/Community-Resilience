@@ -51,13 +51,25 @@
   <div class="map-panel">
     <div class="map-panel-header">
       <div>
-        <strong>📍 Live Safety Map</strong>
-        <div class="map-note">Tap Locate Me to show your current location and nearby community hubs for disaster relief.</div>
+        <strong>📍 Live Safety Map & Nearby Hubs</strong>
+        <div class="map-note">Find nearest disaster relief centers, emergency shelters, and first-aid stations. Tap "Locate Me" to show your location.</div>
       </div>
-      <button class="map-action-btn" onclick="locateUser()">Locate Me</button>
+      <div style="display:flex; gap:8px">
+        <button class="map-action-btn secondary" onclick="toggleMapMode()">🔄 Mode</button>
+        <button class="map-action-btn" onclick="locateUser()">📍 Locate Me</button>
+      </div>
     </div>
     <div id="locationMap" class="map-canvas"></div>
-    <div class="map-footer">The map supports offline-ready location context and SOS anchoring.</div>
+    <div class="map-footer">
+      <span id="mapStatus">Loading map...</span>
+      <span style="margin-left: auto; cursor: pointer;" onclick="toggleMapLegend()">📋 Legend</span>
+    </div>
+    <div id="mapLegend" class="map-legend" style="display:none">
+      <div><span class="legend-marker" style="background:#10B981;"></span> Relief Center</div>
+      <div><span class="legend-marker" style="background:#F59E0B;"></span> Shelter</div>
+      <div><span class="legend-marker" style="background:#EF4444;"></span> Medical</div>
+      <div><span class="legend-marker" style="background:#6366F1;"></span> Your Location</div>
+    </div>
   </div>
 
   <!-- ── BLOCKCHAIN STRIP ── -->
@@ -81,7 +93,7 @@
   </div>
 
   <!-- ── MESSAGES ── -->
-  <main class="messages" id="messages">
+  <main class="messages" id="messages" role="log" aria-live="polite" aria-label="Chat messages">
     <div class="msg-wrap fade-in">
       <div class="msg-meta"><span>SYSTEM</span><span>BLOCK #0 · GENESIS</span></div>
       <div class="msg-bubble bot">
