@@ -37,7 +37,7 @@ CHUNK_OVERLAP = 100    # overlap between chunks
 class RAGEngine:
     def __init__(self):
         self.groq_api_key = os.getenv("GROQ_API_KEY", "")
-        self.groq_model = "llama3-8b-8192"
+        self.groq_model = "llama-3.3-70b-versatile"
         self.groq_api_base = "https://api.groq.com/openai/v1"
         print(f"INFO: Groq API enabled with model {self.groq_model}")
 
@@ -79,7 +79,9 @@ class RAGEngine:
 
         if self.groq_api_key:
             messages = self._build_groq_messages(system_prompt, history, user_message, context_chunks)
+            print(f"DEBUG: Calling Groq API with model={self.groq_model}, messages={len(messages)}")
             model_response = self._call_groq(messages)
+            print(f"DEBUG: Groq response length={len(model_response) if model_response else 0}")
             if model_response:
                 return model_response
             print("WARNING: Groq generation failed; falling back to local synthesis.")
@@ -167,6 +169,7 @@ class RAGEngine:
             with urllib.request.urlopen(req, timeout=20) as response:
                 response_data = response.read().decode("utf-8")
                 result = json.loads(response_data)
+                print(f"DEBUG: Groq raw response keys: {list(result.keys())}")
         except urllib.error.HTTPError as err:
             try:
                 error_text = err.read().decode("utf-8")
