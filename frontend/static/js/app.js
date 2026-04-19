@@ -40,7 +40,24 @@ function initializeMap() {
     attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
+  addCommunityHubs();
   locateUser(true);
+}
+
+function addCommunityHubs() {
+  if (!map) return;
+
+  const communityHubs = [
+    { name: "Bengaluru Relief Hub", lat: 12.9716, lng: 77.5946, info: "Local relief and evacuation coordination." },
+    { name: "Chennai Flood Support Centre", lat: 13.0827, lng: 80.2707, info: "Flood shelter and community aid." },
+    { name: "Hyderabad Emergency Hub", lat: 17.3850, lng: 78.4867, info: "First-aid and disaster response station." },
+    { name: "Mysuru Community Safety Hub", lat: 12.2958, lng: 76.6394, info: "Community resilience and training centre." },
+  ];
+
+  communityHubs.forEach(hub => {
+    const marker = L.marker([hub.lat, hub.lng]).addTo(map);
+    marker.bindPopup(`<strong>${hub.name}</strong><br>${hub.info}`);
+  });
 }
 
 function locateUser(silent = false) {
