@@ -140,10 +140,23 @@ async function sendMessage() {
       }),
     });
 
-    const data = await res.json();
+    const raw = await res.text();
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (parseErr) {
+      removeTyping();
+      throw new Error(`Invalid API response: ${raw.substring(0, 200)}`);
+    }
+
     removeTyping();
 
-    if (data.error) throw new Error(data.error);
+    if (!res.ok) {
+      throw new Error(data.error || `API error ${res.status}`);
+    }
+    if (data.error) {
+      throw new Error(data.error);
+    }
 
     conversationHistory.push({ role: "assistant", content: data.response });
     blockCount = data.block.index + 1;
