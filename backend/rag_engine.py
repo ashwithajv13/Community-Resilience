@@ -88,11 +88,27 @@ class RAGEngine:
             print("WARNING: Groq generation failed; falling back to local synthesis.")
 
         if not context_chunks:
-            return "I couldn't find relevant information about your query. Please contact NDRF: 1078 for accurate assistance."
+            if self._is_generic_query(user_message):
+                return self._generic_overview_response()
+            context_chunks = self.chunks[:5]
+            if not context_chunks:
+                return "I couldn't find relevant information about your query. Please contact NDRF: 1078 for accurate assistance."
 
         # Synthesize response from multiple chunks
         response = self._synthesize_response(user_message, context_chunks)
         return response
+
+    def _is_generic_query(self, query: str) -> bool:
+        normalized = query.lower().strip()
+        return bool(re.search(r"\b(hi|hello|hey|what can you|what do you|who are you|help|tell me|how are you|what is this|greetings|good morning|good evening)\b", normalized))
+
+    def _generic_overview_response(self) -> str:
+        return (
+            "I am ResilienceChain AI, a disaster intelligence assistant grounded in verified NDRF and SDMA protocols. "
+            "I can help with emergency preparedness, safe response steps for floods, earthquakes, cyclones, landslides, heatwaves, first aid, evacuation, and community resilience. "
+            "Ask me what to do before, during, or after a disaster. "
+            "If this is a real emergency, call 112 (National Emergency) or 1078 (NDRF) immediately."
+        )
 
     def _build_groq_prompt(self, system_prompt: str, history: list, user_message: str, chunks: List[str]) -> str:
         if chunks:
