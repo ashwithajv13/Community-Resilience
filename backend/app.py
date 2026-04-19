@@ -23,7 +23,7 @@ DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data"))
 MANUALS_DIR = os.path.join(DATA_DIR, "manuals")
 os.makedirs(MANUALS_DIR, exist_ok=True)
 
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/static")
 CORS(app)
 
 # Initialize core systems
@@ -58,6 +58,11 @@ def training_page():
 @app.route("/recovery")
 def recovery_page():
     return send_from_directory(FRONTEND_DIR, "recovery.html")
+
+
+@app.route("/static/<path:filename>")
+def static_files(filename):
+    return send_from_directory(os.path.join(FRONTEND_DIR, "static"), filename)
 
 
 @app.route("/api/chat", methods=["POST"])
