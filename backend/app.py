@@ -19,11 +19,12 @@ load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data"))
 MANUALS_DIR = os.path.join(DATA_DIR, "manuals")
 os.makedirs(MANUALS_DIR, exist_ok=True)
 
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/static")
+app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="/static")
 CORS(app)
 
 # Initialize core systems
