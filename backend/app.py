@@ -60,11 +60,6 @@ def recovery_page():
     return send_from_directory(FRONTEND_DIR, "recovery.html")
 
 
-@app.route("/static/<path:filename>")
-def static_files(filename):
-    return send_from_directory(os.path.join(FRONTEND_DIR, "static"), filename)
-
-
 @app.route("/api/chat", methods=["POST"])
 def chat():
     """Main chat endpoint: RAG retrieval → AI response → blockchain log."""
