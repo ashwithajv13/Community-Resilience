@@ -9,6 +9,9 @@ const API_BASE = "";   // empty = same origin (Flask serves both)
 let conversationHistory = [];
 let blockCount = 1;
 let isLoading = false;
+let map = null;
+let locationMarker = null;
+let currentLocation = null;
 
 // ─────────────────────────────────────────────
 // INIT
@@ -17,7 +20,61 @@ let isLoading = false;
 window.addEventListener("DOMContentLoaded", async () => {
   await refreshStatus();
   setInterval(refreshStatus, 15000);
+  initializeMap();
 });
+
+function initializeMap() {
+  const mapElement = document.getElementById("locationMap");
+  if (!mapElement) return;
+
+  map = L.map(mapElement, {
+    center: [20.5937, 78.9629],
+    zoom: 4,
+    zoomControl: true,
+    attributionControl: false,
+  });
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    minZoom: 2,
+    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  locateUser(true);
+}
+
+function locateUser(silent = false) {
+  if (!navigator.geolocation) {
+    if (!silent) appendSystemMessage("⚠️ Geolocation is not supported by your browser.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      currentLocation = { lat: latitude, lng: longitude };
+      setMapLocation(latitude, longitude);
+      if (!silent) appendSystemMessage(`📍 Your current position is set to ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`);
+    },
+    (error) => {
+      if (!silent) appendErrorMessage(`Unable to read location: ${error.message}`);
+    },
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+  );
+}
+
+function setMapLocation(lat, lng) {
+  if (!map) return;
+  map.setView([lat, lng], 12);
+
+  if (locationMarker) {
+    locationMarker.setLatLng([lat, lng]);
+  } else {
+    locationMarker = L.marker([lat, lng], { title: "Your location" }).addTo(map);
+  }
+
+  locationMarker.bindPopup(`<strong>Your location</strong><br>${lat.toFixed(4)}, ${lng.toFixed(4)}`).openPopup();
+}
 
 async function refreshStatus() {
   try {
