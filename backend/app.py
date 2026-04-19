@@ -80,7 +80,7 @@ def chat():
     # 2. Build augmented prompt
     system_prompt = build_system_prompt(context_text)
 
-    # 3. Get AI response via Anthropic
+    # 3. Get AI response via Groq if configured, otherwise local synthesis
     ai_response = rag.generate(
         system_prompt=system_prompt,
         history=conversation_history,

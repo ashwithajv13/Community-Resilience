@@ -1,13 +1,12 @@
 flask>=3.0.0
 flask-cors>=4.0.0
 python-dotenv>=1.0.0
-anthropic>=0.25.0
 PyMuPDF>=1.24.0
 gunicorn>=23.1.0
 
-# RAG vector search (recommended)
-faiss-cpu>=1.7.4
-sentence-transformers>=2.7.0
+# Optional: alternative RAG search engines
+# faiss-cpu>=1.7.4
+# sentence-transformers>=2.7.0
 
-# Optional: alternative embeddings
-# openai>=1.0.0  # if you want OpenAI embeddings instead
+# Optional: if you want Anthropic or other LLMs
+# anthropic>=0.25.0

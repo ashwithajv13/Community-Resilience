@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/$",
+      "dest": "/public/community.html"
+    },
+    {
+      "src": "/community",
+      "dest": "/public/community.html"
+    },
+    {
+      "src": "/chat",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/resources",
+      "dest": "/public/resources.html"
+    },
+    {
+      "src": "/training",
+      "dest": "/public/training.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
+    }
+  ]
+}

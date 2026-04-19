@@ -5,22 +5,16 @@ Retrieval-Augmented Generation using:
   - PyMuPDF for PDF parsing
   - FAISS for vector similarity search
   - sentence-transformers for embeddings
-  - Anthropic Claude for generation
+  - Groq generative API for response generation
 """
 
-import os
 import json
+import os
 import pickle
 import re
+import urllib.error
+import urllib.request
 from typing import List
-
-try:
-    import anthropic
-    ANTHROPIC_AVAILABLE = True
-except (ImportError, SyntaxError):
-    anthropic = None
-    ANTHROPIC_AVAILABLE = False
-    print("WARNING: Anthropic SDK not available. External AI disabled.")
 
 try:
     import fitz  # PyMuPDF
@@ -28,17 +22,9 @@ try:
 except ImportError:
     FITZ_AVAILABLE = False
     print("WARNING: PyMuPDF not available. PDF ingestion disabled.")
-import numpy as np
 
-# Try to import FAISS and sentence-transformers (optional at startup)
-try:
-    # import faiss
-    # from sentence_transformers import SentenceTransformer
-    FAISS_AVAILABLE = False
-    print("WARNING: FAISS/sentence-transformers not imported.")
-except ImportError:
-    FAISS_AVAILABLE = False
-    print("WARNING: FAISS/sentence-transformers not installed. Using keyword fallback.")
+# FAISS and sentence-transformers are optional and not required for lightweight hosting.
+FAISS_AVAILABLE = False
 
 
 EMBED_MODEL = "all-MiniLM-L6-v2"
@@ -50,15 +36,14 @@ CHUNK_OVERLAP = 100    # overlap between chunks
 
 class RAGEngine:
     def __init__(self):
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-        if ANTHROPIC_AVAILABLE and api_key:
-            self.client = anthropic.Anthropic(api_key=api_key)
+        self.groq_api_key = os.getenv("GROQ_API_KEY")
+        self.groq_model = os.getenv("GROQ_MODEL", "groq-1.5-mini")
+        self.groq_api_base = os.getenv("GROQ_API_BASE", "https://api.groq.dev/v1")
+        if self.groq_api_key:
+            print(f"INFO: Groq API enabled with model {self.groq_model}")
         else:
-            self.client = None
-            if not ANTHROPIC_AVAILABLE:
-                print("WARNING: Anthropic SDK unavailable. Using local synthesis only.")
-            else:
-                print("WARNING: ANTHROPIC_API_KEY not set. Using local synthesis only.")
+            print("WARNING: GROQ_API_KEY not set. Using local synthesis only.")
+
         self.chunks: List[str] = []
         self.index = None
         self.embedder = None
@@ -88,20 +73,88 @@ class RAGEngine:
             return self._keyword_retrieve(query, top_k)
 
     def generate(self, system_prompt: str, history: list, user_message: str) -> str:
-        """Generate a response from RAG knowledge base without external AI."""
+        """Generate a response, using Groq if available, otherwise fallback to local synthesis."""
         if not self.chunks:
             return "No knowledge base available. Please upload disaster management manuals."
-        
+
         # Retrieve top-5 most relevant chunks for better synthesis
         context_chunks = self.retrieve(user_message, top_k=5)
-        
+
+        if self.groq_api_key:
+            prompt = self._build_groq_prompt(system_prompt, history, user_message, context_chunks)
+            model_response = self._call_groq(prompt)
+            if model_response:
+                return model_response
+            print("WARNING: Groq generation failed; falling back to local synthesis.")
+
         if not context_chunks:
             return "I couldn't find relevant information about your query. Please contact NDRF: 1078 for accurate assistance."
-        
+
         # Synthesize response from multiple chunks
         response = self._synthesize_response(user_message, context_chunks)
         return response
-    
+
+    def _build_groq_prompt(self, system_prompt: str, history: list, user_message: str, chunks: List[str]) -> str:
+        if chunks:
+            context_text = "\n\n".join(chunks)
+        else:
+            context_text = "No relevant manual context found. Use standard NDRF protocols only."
+
+        conversation = ""
+        for turn in history:
+            role = turn.get("role", "user")
+            content = turn.get("content", "")
+            if content:
+                conversation += f"{role.capitalize()}: {content}\n"
+
+        prompt = (
+            f"{system_prompt}\n\n"
+            f"Context:\n{context_text}\n\n"
+            f"{conversation}"
+            f"User: {user_message}\n"
+            f"Assistant:"
+        )
+        return prompt
+
+    def _call_groq(self, prompt: str) -> str:
+        endpoint = f"{self.groq_api_base}/models/{self.groq_model}/outputs"
+        payload = {
+            "input": prompt,
+            "max_output_tokens": 256,
+            "temperature": 0.2,
+        }
+        data = json.dumps(payload).encode("utf-8")
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.groq_api_key}",
+        }
+
+        request = urllib.request.Request(endpoint, data=data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(request, timeout=20) as response:
+                response_data = response.read().decode("utf-8")
+                result = json.loads(response_data)
+        except urllib.error.HTTPError as err:
+            try:
+                error_text = err.read().decode("utf-8")
+            except Exception:
+                error_text = str(err)
+            print(f"ERROR: Groq API HTTPError {err.code}: {error_text}")
+            return ""
+        except Exception as err:
+            print(f"ERROR: Groq API request failed: {err}")
+            return ""
+
+        output = result.get("output")
+        if isinstance(output, list):
+            if output and isinstance(output[0], dict) and "content" in output[0]:
+                return "".join(item.get("content", "") for item in output if isinstance(item, dict))
+            if all(isinstance(item, str) for item in output):
+                return "".join(output)
+        if isinstance(output, str):
+            return output
+        return result.get("text", "") or ""
+
     def _synthesize_response(self, query: str, chunks: List[str]) -> str:
         """Synthesize a coherent answer from multiple knowledge chunks."""
         query_lower = query.lower()

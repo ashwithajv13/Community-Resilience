@@ -50,11 +50,13 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and add your Anthropic API key:
-# ANTHROPIC_API_KEY=sk-ant-...
+# Edit .env and add your Groq API key:
+# GROQ_API_KEY=your_groq_api_key_here
+# Optionally override the model:
+# GROQ_MODEL=groq-1.5-mini
 ```
 
-Get your API key at → https://console.anthropic.com
+Get your API key at → https://www.groq.com
 
 ### 3. Run the server
 
@@ -114,7 +116,7 @@ The best full-hosting option for the complete app is Render, because it can run 
    gunicorn application:application --bind 0.0.0.0:$PORT
    ```
 6. Add the required environment variable:
-   - `ANTHROPIC_API_KEY`
+   - `GROQ_API_KEY`
 
 Notes:
 - This keeps the frontend and backend on the same domain, so `API_BASE = ""` works correctly.
