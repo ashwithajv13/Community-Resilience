@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: community-resilience-master
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn application:application --bind 0.0.0.0:$PORT

@@ -66,8 +66,90 @@ python app.py
 Open → **http://localhost:5000**
 
 ---
+## ☁️ Deploy to AWS Elastic Beanstalk
 
-## 📚 How to Add NDRF/SDMA Manuals
+This repository is ready for AWS Elastic Beanstalk deployment using the Python app platform.
+
+1. Install AWS CLI and EB CLI:
+   ```bash
+   pip install awscli awsebcli
+   ```
+2. Configure AWS credentials:
+   ```bash
+   aws configure
+   ```
+3. Initialize Elastic Beanstalk in the repo root:
+   ```bash
+   eb init -p python-3.11 community-resilience-master --region us-east-1
+   ```
+4. Create the environment and deploy:
+   ```bash
+   eb create community-resilience-master-env
+   eb deploy
+   ```
+5. Open the live app:
+   ```bash
+   eb open
+   ```
+
+Notes:
+- `application.py` is the EB WSGI entrypoint and points to `backend/app.py`.
+- `Procfile` uses Gunicorn for production hosting.
+- Static frontend content is served from `frontend/` by the Flask app.
+
+---
+## 🚀 Deploy to Render
+
+The best full-hosting option for the complete app is Render, because it can run the Python backend and serve the frontend together.
+
+1. Create a Render account and connect your GitHub repository.
+2. Add `render.yaml` to the project root. This repo already includes `render.yaml`.
+3. In Render, create a new Web Service from the repo.
+4. Set the build command:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Set the start command:
+   ```bash
+   gunicorn application:application --bind 0.0.0.0:$PORT
+   ```
+6. Add the required environment variable:
+   - `ANTHROPIC_API_KEY`
+
+Notes:
+- This keeps the frontend and backend on the same domain, so `API_BASE = ""` works correctly.
+- `render.yaml` makes the deployment configuration reproducible.
+
+---
+## 🚀 Deploy to Vercel
+
+This project can deploy as a Vercel Python function for the API and static assets served from the `public/` folder.
+
+Steps:
+
+1. Install the Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+2. Log in and link the project:
+   ```bash
+   cd <repo-root>
+   vercel login
+   vercel
+   ```
+3. Deploy:
+   ```bash
+   vercel --prod
+   ```
+
+Notes:
+- The backend uses the `api/app.py` Vercel function.
+- Static front-end files are served from `public/`.
+- File uploads and local vector data are ephemeral on Vercel, so this deployment is best for demo/testing, not long-term production storage.
+
+---
+
+## �📚 How to Add NDRF/SDMA Manuals
 
 **Option A: Upload via UI**  
 Click **📄 UPLOAD MANUAL** in the top-right corner and select any PDF.
