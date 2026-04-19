@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+data/faiss.index
+data/chunks.pkl
+data/ledger.json
+data/manuals/
+*.pdf
+.venv/
+venv/
+node_modules/
+.DS_Store

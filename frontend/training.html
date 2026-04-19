@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training & Drills - ResilienceChain AI</title>
+  <link rel="stylesheet" href="static/css/community.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="logo-block">
+      <h1>Training & Drills</h1>
+      <p>Plan resilience training across your community.</p>
+    </div>
+    <div class="header-right">
+      <nav class="site-nav">
+        <a href="/chat">Disaster Chat</a>
+        <a href="/community">Community Hub</a>
+        <a href="/resources">Resources</a>
+        <a href="/training" class="active">Training</a>
+        <a href="/recovery">Recovery</a>
+      </nav>
+      <div class="status-pill">Blocks: <span id="blockCount">1</span></div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="section">
+      <h2>Schedule a Drill</h2>
+      <p>Create workshops and emergency drills to keep your community prepared.</p>
+      <form onsubmit="scheduleTraining(event)">
+        <input type="number" id="trainingGroupId" placeholder="Group ID" required />
+        <input type="text" id="trainingTitle" placeholder="Training title" required />
+        <select id="trainingCategory" required>
+          <option value="">Category...</option>
+          <option value="earthquake">Earthquake Drill</option>
+          <option value="first_aid">First Aid Training</option>
+          <option value="evacuation">Evacuation Drill</option>
+          <option value="search_rescue">Search & Rescue</option>
+          <option value="leadership">Leadership & Coordination</option>
+          <option value="preparedness">General Preparedness</option>
+        </select>
+        <textarea id="trainingDesc" placeholder="Description"></textarea>
+        <input type="date" id="trainingDate" required />
+        <button type="submit" class="btn-primary">Schedule Drill</button>
+      </form>
+    </div>
+
+    <div class="section">
+      <h2>Training Sessions</h2>
+      <div id="trainingList" class="list-container"></div>
+    </div>
+
+    <div class="section">
+      <h2>Record Completion</h2>
+      <form onsubmit="completeTraining(event)">
+        <input type="number" id="completeSessionId" placeholder="Session ID" required />
+        <input type="text" id="completeUserId" placeholder="Volunteer / Participant ID" required />
+        <button type="submit" class="btn-primary">Mark Complete</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">ResilienceChain Training | Preparedness that saves lives</footer>
+</div>
+<script src="static/js/community.js"></script>
+</body>
+</html>

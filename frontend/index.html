@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResilienceChain AI</title>
+  <link rel="stylesheet" href="static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="logo-block">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00FFB2" stroke-width="2" stroke-linecap="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div class="brand">
+        <h1 class="brand-name">Resilience<span>Chain</span> AI</h1>
+        <p class="brand-sub">DECENTRALIZED DISASTER INTELLIGENCE · NDRF/SDMA VERIFIED</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <nav class="site-nav">
+        <a href="/chat" class="active">Disaster Chat</a>
+        <a href="/community">Community Hub</a>
+        <a href="/resources">Resources</a>
+        <a href="/training">Training</a>
+        <a href="/recovery">Recovery</a>
+      </nav>
+      <div class="status-pill rag-status" id="ragStatus">
+        <div class="pulse-dot"></div> RAG LOADING
+      </div>
+      <div class="status-pill chain-status">
+        ⛓ <span id="blockCount">1</span> BLOCKS
+      </div>
+      <button class="upload-btn" onclick="document.getElementById('pdfInput').click()">
+        📄 UPLOAD MANUAL
+      </button>
+      <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="uploadPDF(this)" />
+    </div>
+  </header>
+
+  <!-- ── BLOCKCHAIN STRIP ── -->
+  <div class="ledger-strip">
+    <span class="ledger-label">⛓ LEDGER</span>
+    <div class="ledger-scroll">
+      <span id="chainScroll">Initializing genesis block · NDRF Manual loaded · SDMA Protocol active · SHA-256 engine ready · Awaiting first query...</span>
+    </div>
+  </div>
+
+  <!-- ── QUICK CHIPS ── -->
+  <div class="quick-bar">
+    <button class="q-chip" onclick="sendChip('What should I do during a flood?')">🌊 FLOOD</button>
+    <button class="q-chip" onclick="sendChip('Earthquake safety protocol')">🏚 EARTHQUAKE</button>
+    <button class="q-chip" onclick="sendChip('How to prepare an emergency kit?')">🎒 EMERGENCY KIT</button>
+    <button class="q-chip" onclick="sendChip('Cyclone warning procedures')">🌀 CYCLONE</button>
+    <button class="q-chip" onclick="sendChip('How to evacuate safely?')">🚨 EVACUATION</button>
+    <button class="q-chip" onclick="sendChip('Landslide safety steps')">⛰ LANDSLIDE</button>
+    <button class="q-chip" onclick="sendChip('First aid for disaster victims')">🏥 FIRST AID</button>
+    <button class="q-chip" onclick="sendChip('Community mental health after disaster')">🧠 MENTAL HEALTH</button>
+  </div>
+
+  <!-- ── MESSAGES ── -->
+  <main class="messages" id="messages">
+    <div class="msg-wrap fade-in">
+      <div class="msg-meta"><span>SYSTEM</span><span>BLOCK #0 · GENESIS</span></div>
+      <div class="msg-bubble bot">
+        <strong>ResilienceChain AI initialized.</strong><br><br>
+        All responses are grounded in <strong>verified NDRF &amp; SDMA protocols</strong> using
+        RAG (Retrieval-Augmented Generation). Every interaction is permanently sealed
+        on an immutable blockchain ledger.<br><br>
+        Ask me anything about emergency preparedness, disaster response, or community
+        resilience — or hit <strong>🆘 SOS</strong> to log an emergency alert.
+        <br><br>
+        <span class="source-tag">📄 NDRF SOP 2023 · SDMA Protocol · Community Resilience Guidelines</span>
+        <span class="hash-tag">⛓ GENESIS: 0x00000000</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── INPUT AREA ── -->
+  <footer class="input-area">
+    <div class="input-row">
+      <textarea
+        id="input"
+        class="input-box"
+        placeholder="Ask about emergency protocols, disaster preparedness, community safety..."
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <div class="btn-group">
+        <button class="sos-btn" onclick="triggerSOS()">🆘 SOS</button>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#050A0E" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2" fill="#050A0E"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <span id="ragInfo">⚡ RAG: Initializing...</span>
+      <span id="blockInfo">⛓ Blocks: 1</span>
+      <a href="/api/ledger" target="_blank" class="ledger-link">View Full Ledger →</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ── SOS MODAL ── -->
+<div class="modal-overlay" id="sosModal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">🆘 SOS EMERGENCY ALERT</div>
+    <p class="modal-sub">This alert will be permanently recorded on the blockchain ledger.</p>
+    <input type="text" id="sosLocation" placeholder="Your location (e.g. Bengaluru, KA)" class="modal-input" />
+    <textarea id="sosDetails" placeholder="Describe the emergency..." class="modal-input" rows="3"></textarea>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeSOS()">CANCEL</button>
+      <button class="modal-confirm" onclick="submitSOS()">🆘 SEND ALERT</button>
+    </div>
+  </div>
+</div>
+
+<script src="static/js/app.js"></script>
+</body>
+</html>

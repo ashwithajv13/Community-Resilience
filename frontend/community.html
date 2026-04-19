@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Resilience Hub - ResilienceChain AI</title>
+  <link rel="stylesheet" href="static/css/community.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="app">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-block">
+      <h1>ResilienceChain Community Hub</h1>
+      <p>Build Local Resilience Together</p>
+    </div>
+    <div class="header-right">
+      <nav class="site-nav">
+        <a href="/chat">Disaster Chat</a>
+        <a href="/community" class="active">Community Hub</a>
+        <a href="/resources">Resources</a>
+        <a href="/training">Training</a>
+        <a href="/recovery">Recovery</a>
+      </nav>
+      <div class="status-pill">Blocks: <span id="blockCount">1</span></div>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- COMMUNITY GROUPS TAB -->
+    <div id="groups-tab" class="tab-content active">
+      <h2>Community Groups</h2>
+      <p>Build resilience networks in your neighborhood</p>
+      
+      <div class="section">
+        <h3>Create a Group</h3>
+        <form onsubmit="createGroup(event)">
+          <input type="text" id="groupName" placeholder="Group name" required />
+          <input type="text" id="groupLocation" placeholder="Location (e.g., Ward 5, Downtown)" required />
+          <textarea id="groupDesc" placeholder="What's your community's resilience goal?"></textarea>
+          <input type="text" id="groupLeader" placeholder="Your name" required />
+          <button type="submit" class="btn-primary">Create Group</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h3>Find Groups</h3>
+        <input type="text" id="searchLocation" placeholder="Search by location" />
+        <button onclick="searchGroups()" class="btn-secondary">Search</button>
+        <div id="groupsList" class="list-container"></div>
+      </div>
+
+      <div class="section">
+        <h3>My Groups</h3>
+        <div id="myGroups" class="list-container"></div>
+      </div>
+    </div>
+
+    <!-- KNOWLEDGE SHARING TAB -->
+    <div id="knowledge-tab" class="tab-content">
+      <h2>Community Knowledge Base</h2>
+      <p>Share verified disaster survival tips and lessons learned</p>
+
+      <div class="section">
+        <h3>Share a Tip</h3>
+        <form onsubmit="shareTip(event)">
+          <select id="tipCategory" required>
+            <option value="">Select category...</option>
+            <option value="earthquake">Earthquake Safety</option>
+            <option value="flood">Flood Response</option>
+            <option value="cyclone">Cyclone Preparedness</option>
+            <option value="first_aid">First Aid</option>
+            <option value="mental_health">Mental Health Support</option>
+            <option value="recovery">Recovery Tips</option>
+            <option value="preparedness">General Preparedness</option>
+          </select>
+          <input type="text" id="tipTitle" placeholder="Tip title" required />
+          <textarea id="tipContent" placeholder="Share your tip or lesson learned..." required></textarea>
+          <input type="number" id="tipGroupId" placeholder="Group ID (optional)" />
+          <button type="submit" class="btn-primary">Share Tip</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h3>Browse Tips</h3>
+        <div style="margin-bottom: 15px;">
+          <label><input type="radio" name="tipFilter" value="all" checked onchange="loadTips()"> All Tips</label>
+          <label><input type="radio" name="tipFilter" value="verified" onchange="loadTips()"> Verified Only</label>
+        </div>
+        <div id="tipsList" class="list-container"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>ResilienceChain Community Platform | Every action is recorded on an immutable ledger</p>
+  </footer>
+</div>
+
+<script src="static/js/community.js"></script>
+</body>
+</html>
