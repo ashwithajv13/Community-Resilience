@@ -39,7 +39,7 @@ class RAGEngine:
         self.groq_api_key = os.getenv("GROQ_API_KEY", "")
         self.groq_model = "llama-3.3-70b-versatile"
         self.groq_api_base = "https://api.groq.com/openai/v1"
-        print(f"INFO: Groq API enabled with model {self.groq_model}")
+        print(f"INFO: Groq API key loaded, model={self.groq_model}")
 
         self.chunks: List[str] = []
         self.index = None

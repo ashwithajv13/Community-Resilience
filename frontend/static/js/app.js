@@ -71,20 +71,45 @@ function addCommunityHubs() {
     { name: "Hyderabad Disaster Control", lat: 17.3850, lng: 78.4867, type: "relief", info: "Real-time disaster updates • Relief coordination • SOS routing" },
     { name: "Mumbai Emergency Ops", lat: 19.0760, lng: 72.8777, type: "relief", info: "Coastal disaster response • High-rise evacuation • Multi-hazard center" },
     { name: "Delhi National Center", lat: 28.7041, lng: 77.1025, type: "relief", info: "NDRF Coordination • National protocols • Emergency hotline" },
-    
+    { name: "Ahmedabad Relief Center", lat: 23.0225, lng: 72.5714, type: "relief", info: "Earthquake & flood response • SDMA coordination • 24/7 helpline" },
+    { name: "Jaipur Disaster Hub", lat: 26.9124, lng: 75.7873, type: "relief", info: "Heatwave & drought response • Community alerts • Resource dispatch" },
+    { name: "Bhopal Emergency Ops", lat: 23.2599, lng: 77.4126, type: "relief", info: "Industrial hazard response • Flood coordination • NDRF liaison" },
+    { name: "Patna Flood Control", lat: 25.5941, lng: 85.1376, type: "relief", info: "Ganga flood response • Boat rescue coordination • Relief camps" },
+    { name: "Guwahati Flood Center", lat: 26.1445, lng: 91.7362, type: "relief", info: "Brahmaputra flood response • Landslide alerts • NE India coordination" },
+
     // Shelters
     { name: "Bengaluru Shelter Complex", lat: 13.0350, lng: 77.6245, type: "shelter", info: "Capacity: 500+ persons • Medical support • Family reunification" },
     { name: "Chennai Safe Haven", lat: 13.1939, lng: 80.1850, type: "shelter", info: "Capacity: 800+ persons • Sanitation facilities • Food provision" },
     { name: "Hyderabad Community Center", lat: 17.4080, lng: 78.4777, type: "shelter", info: "Capacity: 400+ persons • Children care • Senior services" },
     { name: "Pune Emergency Shelter", lat: 18.5204, lng: 73.8567, type: "shelter", info: "Capacity: 600+ persons • Pet-friendly • Accessibility features" },
     { name: "Kolkata Relief Camp", lat: 22.5726, lng: 88.3639, type: "shelter", info: "Capacity: 700+ persons • Flood response ready • Boat access" },
-    
+    { name: "Mumbai Dharavi Shelter", lat: 19.0422, lng: 72.8530, type: "shelter", info: "Capacity: 1000+ persons • Cyclone-proof structure • Food & water" },
+    { name: "Delhi Yamuna Flood Shelter", lat: 28.6692, lng: 77.2311, type: "shelter", info: "Capacity: 900+ persons • Flood-prone area • Temporary housing" },
+    { name: "Surat Flood Relief Camp", lat: 21.1702, lng: 72.8311, type: "shelter", info: "Capacity: 500+ persons • Tapi river flood zone • Medical aid" },
+    { name: "Bhubaneswar Cyclone Shelter", lat: 20.2961, lng: 85.8245, type: "shelter", info: "Capacity: 1200+ persons • Cyclone-resistant • Odisha coast zone" },
+    { name: "Visakhapatnam Coastal Shelter", lat: 17.6868, lng: 83.2185, type: "shelter", info: "Capacity: 800+ persons • Cyclone & tsunami ready • AP coast" },
+    { name: "Kochi Flood Shelter", lat: 9.9312, lng: 76.2673, type: "shelter", info: "Capacity: 600+ persons • Kerala floods • Backwater zone support" },
+    { name: "Thiruvananthapuram Relief Camp", lat: 8.5241, lng: 76.9366, type: "shelter", info: "Capacity: 500+ persons • Landslide & flood zone • Medical unit" },
+    { name: "Nagpur Central Shelter", lat: 21.1458, lng: 79.0882, type: "shelter", info: "Capacity: 400+ persons • Heatwave relief • Central India hub" },
+    { name: "Lucknow Flood Camp", lat: 26.8467, lng: 80.9462, type: "shelter", info: "Capacity: 700+ persons • Gomti river zone • UP state coordination" },
+    { name: "Indore Emergency Shelter", lat: 22.7196, lng: 75.8577, type: "shelter", info: "Capacity: 450+ persons • Flash flood zone • MP state support" },
+    { name: "Ranchi Tribal Shelter", lat: 23.3441, lng: 85.3096, type: "shelter", info: "Capacity: 350+ persons • Flood & landslide zone • Jharkhand" },
+    { name: "Jammu Relief Shelter", lat: 32.7266, lng: 74.8570, type: "shelter", info: "Capacity: 400+ persons • Earthquake & flood zone • J&K support" },
+    { name: "Dehradun Landslide Shelter", lat: 30.3165, lng: 78.0322, type: "shelter", info: "Capacity: 300+ persons • Uttarakhand hills • Landslide response" },
+    { name: "Imphal Earthquake Shelter", lat: 24.8170, lng: 93.9368, type: "shelter", info: "Capacity: 250+ persons • Seismic zone V • Manipur NE India" },
+    { name: "Agartala Flood Shelter", lat: 23.8315, lng: 91.2868, type: "shelter", info: "Capacity: 300+ persons • Tripura flood zone • Bangladesh border" },
+
     // Medical Centers
     { name: "Bengaluru Central Hospital", lat: 12.9352, lng: 77.6245, type: "medical", info: "Emergency trauma care • Disaster medicine • 24/7 operations" },
     { name: "Chennai Medical Center", lat: 13.1716, lng: 80.2754, type: "medical", info: "Burn unit • Pediatric emergency • Telemedicine ready" },
     { name: "Hyderabad Advanced Care", lat: 17.3950, lng: 78.5000, type: "medical", info: "ICU facilities • Orthopedic trauma • Blood bank services" },
     { name: "Mumbai Trauma Center", lat: 19.0596, lng: 72.8295, type: "medical", info: "Level-1 trauma facility • Surgical suites • AICU beds" },
     { name: "Delhi AIIMS Emergency", lat: 28.5684, lng: 77.2099, type: "medical", info: "National facility • Disaster protocols • Research-backed care" },
+    { name: "Kolkata SSKM Hospital", lat: 22.5355, lng: 88.3400, type: "medical", info: "Mass casualty unit • Burn ward • 24/7 disaster response" },
+    { name: "Ahmedabad Civil Hospital", lat: 23.0395, lng: 72.5890, type: "medical", info: "Earthquake trauma • 1200-bed facility • Blood bank" },
+    { name: "Pune Sassoon Hospital", lat: 18.5195, lng: 73.8553, type: "medical", info: "Flood & trauma care • Poison control • 24/7 emergency" },
+    { name: "Kochi Medical College", lat: 9.9816, lng: 76.2999, type: "medical", info: "Kerala flood response • Leptospirosis treatment • ICU" },
+    { name: "Bhubaneswar AIIMS", lat: 20.2494, lng: 85.8143, type: "medical", info: "Cyclone trauma • Odisha coast • Pediatric emergency" },
   ];
 
   communityHubs.forEach(hub => {
