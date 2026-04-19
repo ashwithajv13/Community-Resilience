@@ -37,7 +37,7 @@ CHUNK_OVERLAP = 100    # overlap between chunks
 class RAGEngine:
     def __init__(self):
         self.groq_api_key = os.getenv("GROQ_API_KEY")
-        self.groq_model = os.getenv("GROQ_MODEL", "groq-1.5-mini")
+        self.groq_model = os.getenv("GROQ_MODEL", "groq/compound-mini")
         self.groq_api_base = os.getenv("GROQ_API_BASE", "https://api.groq.dev/v1")
         if self.groq_api_key:
             print(f"INFO: Groq API enabled with model {self.groq_model}")

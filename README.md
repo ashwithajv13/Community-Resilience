@@ -53,7 +53,7 @@ cp .env.example .env
 # Edit .env and add your Groq API key:
 # GROQ_API_KEY=your_groq_api_key_here
 # Optionally override the model:
-# GROQ_MODEL=groq-1.5-mini
+# GROQ_MODEL=groq/compound-mini
 ```
 
 Get your API key at → https://www.groq.com
